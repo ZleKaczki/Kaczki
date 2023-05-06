@@ -34,7 +34,7 @@ public:
                 column = 1;
             } else if (isalpha(c)) {
                 Token token;
-                token.type = "identyfikator";
+                token.type = "Identyfikator";
                 token.value = c;
                 while (input.get(c)) {
                     if (isalnum(c) || c == '_') {
@@ -50,7 +50,7 @@ public:
                 return token;
             } else if (isdigit(c)) {
                 Token token;
-                token.type = "KaczkiCzyliWszystko";
+                token.type = "Kaczka";
                 token.value = c;
                 while (input.get(c)) {
                     if (isdigit(c) || c == '.') {
@@ -66,24 +66,33 @@ public:
                 return token;
             } else if (c == '+' || c == '-' || c == '*' || c == '/' || c == '=' || c == '<' || c == '>') {
                 Token token;
-                token.type = "operator";
+                token.type = "Operator";
                 token.value = c;
                 column++;
                 token.line = line;
                 token.column = column - 1;
                 return token;
-            } else if (c == '(' || c == ')' || c == '{' || c == '}' || c == '[' || c == ']'
-                       || c == ',' || c == '.' || c == ';' || c == ':') {
+            } else if ( c == ',' || c == '.' || c == ';' || c == ':') {
                 Token token;
-                token.type = "znaki";
+                token.type = "Znak";
                 token.value = c;
                 column++;
                 token.line = line;
                 token.column = column - 1;
                 return token;
-            } else {
+            }
+            else if (c == '(' || c == ')' || c == '{' || c == '}' || c == '[' || c == ']') {
                 Token token;
-                token.type = "error";
+                token.type = "Nawias";
+                token.value = c;
+                column++;
+                token.line = line;
+                token.column = column - 1;
+                return token;
+            }
+            else {
+                Token token;
+                token.type = "Error";
                 token.value = c;
                 token.line = line;
                 token.column = column;
@@ -93,7 +102,7 @@ public:
         }
         Token token;
         token.type = "Koniec";
-        token.value = "Brak";
+        token.value = "";
         token.line = line;
         token.column = column;
         return token;
@@ -106,11 +115,12 @@ private:
 };
 
 int main() {
+    cout<< "Analiza leksykalna linii z pliku example "<<endl;
     Lexer lexer("example.txt");
     Token token;
     do {
         token = lexer.next_token();
         cout << "Token: " << token.type << ", Jak wyglada: " << token.value << ", Linia: " << token.line << ", Kolumna: " << token.column << endl;
-    } while (token.type != "eof");
+    } while (token.type != "Koniec");
     return 0;
 }
